@@ -1,0 +1,15 @@
+[package]
+name = "wgq_rust"
+version = "0.1.0"
+edition = "2021"
+authors = ["disburden <wgq@email.com>"]
+
+description = "我自己用的库,可能不是适合所有人"
+categories = ["development-tools"]
+
+license = "MIT"
+
+[dependencies]
+openssl = "0.10"
+base64 = "0.21"
+bcrypt = "0.17"
