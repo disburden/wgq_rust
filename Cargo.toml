@@ -3,10 +3,10 @@ name = "wgq_rust"
 version = "0.1.0"
 edition = "2021"
 authors = ["disburden <wgq@email.com>"]
-
+repository = "https://github.com/disburden/wgq_rust.git"
+documentation = "file:///home/disburden/work/wgq_rust/home/disburden/.target/doc/wgq_rust/index.html"
 description = "我自己用的库,可能不是适合所有人"
 categories = ["development-tools"]
-
 license = "MIT"
 
 [dependencies]
