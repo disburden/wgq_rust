@@ -1,6 +1,8 @@
 # 忽略由 Cargo 生成的文件
 /target/
 **/target/
+/.target/
+**/.target/
 Cargo.lock
 
 # 忽略 IDE 和编辑器相关的文件

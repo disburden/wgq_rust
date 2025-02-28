@@ -7,6 +7,8 @@ use openssl::error::ErrorStack;
 use base64::{engine::general_purpose, Engine as _};
 use bcrypt::{DEFAULT_COST, hash, verify};
 
+use aes_gcm::{Aes256Gcm, Key, KeyInit, Nonce}; // Or `Aes128Gcm`
+use aes_gcm::aead::Aead;
 
 /// rsa算法,公钥加密
 pub fn encrypt_use_rsa(plain_text: &[u8], public_key: &[u8]) -> Result<Vec<u8>, ErrorStack> {
@@ -73,4 +75,27 @@ pub fn encrypt_use_bcrypt(password: &str) -> Result<String, bcrypt::BcryptError>
 /// 验证bcrypt密码
 pub fn verify_use_bcrypt(password: &str, hash: &str) -> Result<bool, bcrypt::BcryptError> {
     verify(password, hash)
+}
+
+/// 因为加密后的结果是字节数组,不好查看,所以这里先转成base64(还能支持中文)
+/// 主要,key的长度是32字节,需要"abcdabcdabcdabcdabcdabcdabcdabcd"这样有32个字符的符串才行
+/// iv的长度是12字节,"abcdabcdabcd"类似这样
+pub fn encrypt_use_aes(key:&str,iv:&str,plain_text:&str)->String{
+    let key = Key::<Aes256Gcm>::from_slice(key.as_bytes());
+    let cipher = Aes256Gcm::new(key);
+    let nonce = Nonce::from_slice(iv.as_bytes());
+    let ciphertext = cipher.encrypt(nonce, plain_text.as_bytes()).expect("encryption failure");
+    encrypt_use_base64(ciphertext)
+}
+
+/// 这里是和本库的encrypt_use_aes方法配套使用的,原本想让传进来的加密字符串是base64加密后的
+/// 但为了更通用一些,所以这里还是用Vec<u8>传进来
+/// 所以如果密文是用本库的encrypt_use_aes加密的,那么自行用本库的decrypt_use_base64方法解密
+/// 为Vec<u8>再传进来,decrypt_use_base64解密默认返回的就是Vec<u8>
+pub fn decrypt_use_aes(key:&str,iv:&str,cipher_text:&Vec<u8>)-> String{
+    let key = Key::<Aes256Gcm>::from_slice(key.as_bytes());
+    let cipher = Aes256Gcm::new(key);
+    let nonce = Nonce::from_slice(iv.as_bytes()); 
+    let decrypted_text = cipher.decrypt(nonce, cipher_text.as_ref()).expect("decryption failure");
+    String::from_utf8_lossy(&decrypted_text).to_string()
 }
