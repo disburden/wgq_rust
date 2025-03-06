@@ -107,6 +107,10 @@ pub fn decrypt_use_aes(key:&str,iv:&str,cipher_text:&Vec<u8>)-> String{
 }
 
 /// 生成uuid
+/// 格式有三种,普通格式,没有下划线,没有下划线大写
+/// 生成正常格式的uuid:"f00edb48-96a3-4e39-a78f-e62dc99a02eb"
+/// 生成没有下划线的uuid:"dced1b6c9a3944eb82e94c629eaf6ef8"
+/// 生成没有下划线大写的uuid:"D3AB50A7D5F24203818DE9B495D907E8"
 pub fn obtain_uuid(format: UuidFormat) -> String {
     match format {
         UuidFormat::Normal => uuid::Uuid::new_v4().to_string(),
