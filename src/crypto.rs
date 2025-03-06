@@ -10,6 +10,12 @@ use bcrypt::{DEFAULT_COST, hash, verify};
 use aes_gcm::{Aes256Gcm, Key, KeyInit, Nonce}; // Or `Aes128Gcm`
 use aes_gcm::aead::Aead;
 
+pub enum UuidFormat {
+    Normal,
+    NoUnderline,
+    NoUnderlineUpperCase
+}
+
 /// rsa算法,公钥加密
 pub fn encrypt_use_rsa(plain_text: &[u8], public_key: &[u8]) -> Result<Vec<u8>, ErrorStack> {
     let rsa = Rsa::public_key_from_pem(public_key)?;  // 加载公钥
@@ -98,4 +104,13 @@ pub fn decrypt_use_aes(key:&str,iv:&str,cipher_text:&Vec<u8>)-> String{
     let nonce = Nonce::from_slice(iv.as_bytes()); 
     let decrypted_text = cipher.decrypt(nonce, cipher_text.as_ref()).expect("decryption failure");
     String::from_utf8_lossy(&decrypted_text).to_string()
+}
+
+/// 生成uuid
+pub fn obtain_uuid(format: UuidFormat) -> String {
+    match format {
+        UuidFormat::Normal => uuid::Uuid::new_v4().to_string(),
+        UuidFormat::NoUnderline => uuid::Uuid::new_v4().to_string().replace("-", ""),
+        UuidFormat::NoUnderlineUpperCase => uuid::Uuid::new_v4().to_string().replace("-", "").to_uppercase()
+    }
 }
