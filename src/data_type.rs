@@ -1,20 +1,32 @@
-use std::any::type_name;
 use chrono::{DateTime, FixedOffset, NaiveDateTime, Utc};
 use chrono::format::ParseError;
 use openssl::asn1::Asn1Type;
 
-/// 打印变量类型
-pub fn print_type_of<T>(_: &T) -> &'static str {
-    let name = type_name::<T>();
-    print!("类型是: {}\n", name);
-    name
-}
+// /// 打印变量类型
+// pub fn print_type_of<T>(_: &T) -> &'static str {
+//     let name = type_name::<T>();
+//     print!("类型是: {}\n", name);
+//     name
+// }
 
-/// 打印变量类型,并把变量名称也打印,方便阅读
-pub fn print_type_of_with_name<T>(_: &T, var_name: &str) -> &'static str {
-    let name = type_name::<T>();
-    print!("变量{}的类型是: {}\n", var_name, name);
-    name
+// /// 打印变量类型,并把变量名称也打印,方便阅读
+// pub fn print_type_of_with_name<T>(_: &T, var_name: &str) -> &'static str {
+//     let name = type_name::<T>();
+//     print!("变量{}的类型是: {}\n", var_name, name);
+//     name
+// }
+
+#[macro_export]
+macro_rules! var_info {
+    ($var:expr) => {{
+        fn type_name_of<T>(_: &T) -> &'static str {
+            std::any::type_name::<T>()
+        }
+        
+        println!("变量: {}", stringify!($var));
+        println!("类型: {}", type_name_of(&$var));
+        print!("值为: {:?}",&$var);
+    }};
 }
 
 /// String相关方法

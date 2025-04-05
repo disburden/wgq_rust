@@ -1,10 +1,24 @@
 use wgq_rust;
 
+#[derive(Debug)]
+struct TestPerson {
+   name:String,
+   age:i32
+}
 
 fn main(){
-   let result = 33;
-   wgq_rust::print_type_of(&result);
-   wgq_rust::print_type_of_with_name(&result,"result");
+   let var_int = 33;
+   wgq_rust::var_info!(var_int);
+   print!("\n=============\n");
+   let var_str = "test str";
+   wgq_rust::var_info!(var_str);
+   print!("\n=============\n");
+   let test_person = TestPerson{
+      name:"test person".to_string(),
+      age:33
+   };
+   wgq_rust::var_info!(test_person);
+   print!("\n=============\n");
 
    test_rsa();
    test_bcrypt();
