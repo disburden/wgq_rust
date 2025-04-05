@@ -1,6 +1,6 @@
 [package]
 name = "wgq_rust"
-version = "0.1.3"
+version = "0.1.5"
 edition = "2021"
 authors = ["disburden <wgq@email.com>"]
 repository = "https://github.com/disburden/wgq_rust.git"
