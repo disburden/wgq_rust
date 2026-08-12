@@ -20,15 +20,30 @@ fn main(){
    wgq_rust::var_info!(test_person);
    print!("\n=============\n");
 
-   test_rsa();
-   test_bcrypt();
-   test_aes();
-   test_data_type();
+   test_des();
+   // test_rsa();
+   // test_bcrypt();
+   // test_aes();
+   // test_data_type();
 
-   println!("生成正常格式的uuid:{:?}",wgq_rust::obtain_uuid(wgq_rust::UuidFormat::Normal));
-   println!("生成没有下划线的uuid:{:?}",wgq_rust::obtain_uuid(wgq_rust::UuidFormat::NoUnderline));
-   println!("生成没有下划线大写的uuid:{:?}",wgq_rust::obtain_uuid(wgq_rust::UuidFormat::NoUnderlineUpperCase));
+   // println!("生成正常格式的uuid:{:?}",wgq_rust::obtain_uuid(wgq_rust::UuidFormat::Normal));
+   // println!("生成没有下划线的uuid:{:?}",wgq_rust::obtain_uuid(wgq_rust::UuidFormat::NoUnderline));
+   // println!("生成没有下划线大写的uuid:{:?}",wgq_rust::obtain_uuid(wgq_rust::UuidFormat::NoUnderlineUpperCase));
+
 }
+
+fn test_des(){
+   let message = "这是测试加密📱🍉des的字符串";
+   let key = "12345678"; // DES 密钥
+
+   let encrypted_message = wgq_rust::jiami(message, key).unwrap();
+   println!("des加密后的消息:{:?}",encrypted_message);
+   let decrypted_message = wgq_rust::jiemi(&encrypted_message, key).unwrap();
+   println!("des解密后的消息:{:?}",decrypted_message);
+}
+
+
+
 
 fn test_rsa(){
    //测试加解密
