@@ -20,15 +20,17 @@ fn main(){
    wgq_rust::var_info!(test_person);
    print!("\n=============\n");
 
+      println!("生成正常格式的uuid:{:?}",wgq_rust::obtain_uuid(wgq_rust::UuidFormat::Normal));
+   println!("生成没有下划线的uuid:{:?}",wgq_rust::obtain_uuid(wgq_rust::UuidFormat::NoUnderline));
+   println!("生成没有下划线大写的uuid:{:?}",wgq_rust::obtain_uuid(wgq_rust::UuidFormat::NoUnderlineUpperCase));
+
    test_des();
    // test_rsa();
    // test_bcrypt();
    // test_aes();
    // test_data_type();
 
-   // println!("生成正常格式的uuid:{:?}",wgq_rust::obtain_uuid(wgq_rust::UuidFormat::Normal));
-   // println!("生成没有下划线的uuid:{:?}",wgq_rust::obtain_uuid(wgq_rust::UuidFormat::NoUnderline));
-   // println!("生成没有下划线大写的uuid:{:?}",wgq_rust::obtain_uuid(wgq_rust::UuidFormat::NoUnderlineUpperCase));
+
 
 }
 

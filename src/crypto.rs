@@ -53,15 +53,23 @@ pub fn jiami(mingwen: &str, key: &str) -> Result<String, Box<dyn std::error::Err
 }
 /// des解密
 pub fn jiemi(miwen: &str, key: &str) -> Result<String, Box<dyn std::error::Error>> {
-    let encrypted = STANDARD_NO_PAD.decode(miwen)?;
+    // 将base64编码的字符串还原为密文字节数组
+    let encrypted_bytes = decode_base64(miwen)?;
+    // 将key强制设置为8字节长度
     let key_bytes = normalize_key(key);
-    let decrypted = des_ecb_decrypt(&encrypted, &key_bytes)?;
-    let sss = String::from_utf8(decrypted)?;
-    // 中间层改用 STANDARD 解码，接受 = padding
-    let mingwen_bytes = STANDARD.decode(&sss)?;
+    // 使用des_ecb_decrypt函数进行解密,得到明文base64编码的字节数组
+    let decrypted_bytes = des_ecb_decrypt(&encrypted_bytes, &key_bytes)?;
+    //  将明文base64编码的字节数组转换为base64字符串
+    let mingwen_base64 = String::from_utf8(decrypted_bytes)?;
+    //  将base64字符串还原为明文字节数组
+    let mingwen_bytes = decode_base64(&mingwen_base64)?;
+    //  将明文字节数组转换为明文字符串
     let mingwen = String::from_utf8(mingwen_bytes)?;
     Ok(mingwen)
 }
+
+
+
 /// 把 key强制设置为 8 字节长度
 fn normalize_key(key: &str) -> [u8; 8] {
     let bytes = key.as_bytes();
@@ -71,6 +79,14 @@ fn normalize_key(key: &str) -> [u8; 8] {
     result
 }
 
+/// base64 解码
+fn decode_base64(s: &str) -> Result<Vec<u8>, base64::DecodeError> {
+    STANDARD
+        .decode(s)
+        .or_else(|_| STANDARD_NO_PAD.decode(s))
+        .or_else(|_| URL_SAFE.decode(s))
+        .or_else(|_| URL_SAFE_NO_PAD.decode(s))
+}
 /// des加密实现
 fn des_ecb_encrypt(data: &[u8], key: &[u8; 8]) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
     let key_array = GenericArray::from_slice(key);
@@ -92,7 +108,8 @@ fn des_ecb_encrypt(data: &[u8], key: &[u8; 8]) -> Result<Vec<u8>, Box<dyn std::e
     }
     Ok(result)
 }
-/// des解密实现
+
+// /// des解密实现
 fn des_ecb_decrypt(data: &[u8], key: &[u8; 8]) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
     if data.len() % 8 != 0 {
         return Err("密文长度必须是 8 的倍数".into());
